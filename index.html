@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch the Video</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Please watch the Health and Safety induction video before proceeding</h2>
+    <iframe width="560" height="315" 
+        src="https://www.youtube.com/embed/18GtbLDOtsc?autoplay=1&controls=1"
+        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+    </iframe>
+
+    <script>
+        setTimeout(function() {
+            window.location.href = "https://forms.office.com/r/75jdBjwfDw";
+        }, 60000); // Redirects after 60 seconds (adjust as needed)
+    </script>
+</body>
+</html>
