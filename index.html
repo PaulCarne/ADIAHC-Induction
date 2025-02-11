@@ -29,7 +29,7 @@
     </style>
 </head>
 <body>
-    <h2>ADIAHC Health and Safety Induction</h2>
+    <h2>Please watch the Health and Safety induction video before proceeding</h2>
     <div id="player"></div>
 
     <script>
@@ -48,7 +48,8 @@
                 videoId: '18GtbLDOtsc',
                 playerVars: {
                     'autoplay': 1,
-                    'controls': 1
+                    'controls': 1,
+                    'mute': 1, // Mute the video to ensure autoplay works
                 },
                 events: {
                     'onReady': onPlayerReady,
@@ -60,6 +61,7 @@
         // The API will call this function when the video player is ready.
         function onPlayerReady(event) {
             event.target.playVideo();
+            player.unMute(); // Unmute after starting to ensure sound plays
         }
 
         // The API calls this function when the player's state changes.
