@@ -73,14 +73,10 @@
                         lastTimeUpdate = currentTime;
                     }
                 }, 1000);
+            } else if (event.data == YT.PlayerState.ENDED) {
+                window.location.href = "https://forms.office.com/r/75jdBjwfDw";
             }
         }
-    </script>
-
-    <script>
-        setTimeout(function() {
-            window.location.href = "https://forms.office.com/r/75jdBjwfDw";
-        }, 60000); // Redirects after 60 seconds (adjust as needed)
     </script>
 </body>
 </html>
