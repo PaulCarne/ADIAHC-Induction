@@ -43,8 +43,17 @@
             color: white; /* Text color */
             margin-bottom: 20px; /* Add some space below the heading */
         }
-        @media (min-aspect-ratio: 16/9) {
+        /* Media query for landscape orientation */
+        @media (orientation: landscape) {
             #player {
+                width: 100vw; /* 100% of the viewport width */
+                height: 56.25vw; /* Maintain 16:9 aspect ratio */
+            }
+        }
+        /* Media query for portrait orientation */
+        @media (orientation: portrait) {
+            #player {
+                width: 100vw; /* 100% of the viewport width */
                 height: 56.25vw; /* Maintain 16:9 aspect ratio */
             }
         }
