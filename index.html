@@ -51,8 +51,19 @@
             color: white;
             margin-bottom: 20px;
         }
-        .hide-controls {
-            pointer-events: none;
+        #prompt {
+            position: absolute;
+            bottom: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 3;
+        }
+        #open-in-chrome {
+            color: #4285f4;
+            text-decoration: underline;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -61,9 +72,24 @@
     <div id="content">
         <h2>ADIAHC Health and Safety Induction</h2>
         <div id="player"></div>
+        <div id="prompt" style="display: none;">
+            <p>For the best experience, please <span id="open-in-chrome">open this page in Google Chrome</span> or add this page to your home screen.</p>
+        </div>
     </div>
 
     <script>
+        // Check if the user is on iOS
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+        // Detect if the app is running in standalone mode on iOS
+        if (isIOS && window.navigator.standalone === false) {
+            document.getElementById('prompt').style.display = 'block';
+            document.getElementById('open-in-chrome').addEventListener('click', function() {
+                // Replace 'your-url' with the actual URL you want to open in Chrome
+                window.location.href = 'googlechrome://navigate?url=' + encodeURIComponent(window.location.href);
+            });
+        }
+
         // Load the IFrame Player API code asynchronously.
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
