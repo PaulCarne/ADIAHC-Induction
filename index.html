@@ -15,6 +15,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            background: rgba(0, 0, 0, 0.8); /* Dark background to make video stand out */
         }
         #background {
             position: absolute;
@@ -22,7 +23,6 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
             z-index: 1;
         }
         #content {
@@ -82,7 +82,7 @@
                 videoId: 'AaayAuLZkmk', // New video ID
                 playerVars: {
                     'autoplay': 1,
-                    'controls': 0, // Hide controls initially
+                    'controls': 1, // Controls will be visible
                     'mute': 1, // Mute the video to ensure autoplay works
                 },
                 events: {
@@ -114,9 +114,18 @@
             }
         }
 
-        // Add event listener to show controls when the user touches the screen
+        // Add event listener to enter fullscreen mode when the user clicks the video
         document.addEventListener('click', function() {
-            player.getIframe().contentWindow.postMessage('{"event":"command","func":"showVideoInfo","args":""}', '*');
+            var iframe = player.getIframe();
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.mozRequestFullScreen) { // Firefox
+                iframe.mozRequestFullScreen();
+            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { // IE/Edge
+                iframe.msRequestFullscreen();
+            }
         });
     </script>
 </body>
