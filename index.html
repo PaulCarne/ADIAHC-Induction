@@ -28,23 +28,25 @@
         #content {
             position: relative;
             z-index: 2;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
         }
         #player {
-            width: 100vw; /* 100% of the viewport width */
-            height: 56.25vw; /* 56.25% of the viewport width (16:9 aspect ratio) */
-            max-width: 1920px; /* Maximum width */
-            max-height: 1080px; /* Maximum height */
+            width: 100%; /* 100% of the container width */
+            height: auto; /* Maintain aspect ratio */
+            max-width: 100%; /* Ensure the video doesn't overflow */
+        }
+        h2 {
+            font-size: 1.5em; /* Adjust font size for mobile */
+            font-family: Arial, sans-serif; /* Change font to Arial */
+            color: white; /* Text color */
+            margin-bottom: 20px; /* Add some space below the heading */
         }
         @media (min-aspect-ratio: 16/9) {
             #player {
-                width: 177.78vh; /* 177.78% of the viewport height */
-                height: 100vh; /* 100% of the viewport height */
+                height: 56.25vw; /* Maintain 16:9 aspect ratio */
             }
-        }
-        h2 {
-            font-size: 2em; /* Increase font size */
-            font-family: Arial, sans-serif; /* Change font to Arial */
-            color: white; /* Text color */
         }
     </style>
 </head>
