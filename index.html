@@ -82,7 +82,7 @@
                 videoId: 'AaayAuLZkmk', // New video ID
                 playerVars: {
                     'autoplay': 1,
-                    'controls': 1,
+                    'controls': 0, // Hide controls initially
                     'mute': 1, // Mute the video to ensure autoplay works
                 },
                 events: {
@@ -113,6 +113,11 @@
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
             }
         }
+
+        // Add event listener to show controls when the user touches the screen
+        document.addEventListener('click', function() {
+            player.getIframe().contentWindow.postMessage('{"event":"command","func":"showVideoInfo","args":""}', '*');
+        });
     </script>
 </body>
 </html>
