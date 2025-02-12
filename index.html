@@ -11,13 +11,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             height: 100vh;
             margin: 0;
             text-align: center;
             position: relative;
-            overflow: hidden;
             background: rgba(0, 0, 0, 0.8); /* Dark background to make video stand out */
+            overflow: hidden;
         }
         #background {
             position: absolute;
@@ -40,15 +39,17 @@
             box-sizing: border-box;
         }
         #player {
-            width: 100%; /* 100% of the container width */
-            height: auto; /* Maintain aspect ratio */
-            max-width: 100%; /* Ensure the video doesn't overflow */
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            border: none;
         }
         h2 {
-            font-size: 1.5em; /* Adjust font size for mobile */
-            font-family: Arial, sans-serif; /* Change font to Arial */
-            color: white; /* Text color */
-            margin-bottom: 20px; /* Add some space below the heading */
+            font-size: 1.5em;
+            font-family: Arial, sans-serif;
+            color: white;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -108,13 +109,27 @@
             }
         }
 
-        // Add event listener to enter fullscreen mode when the user rotates the device to landscape
+        // Add event listener to resize the player on orientation change
         window.addEventListener('orientationchange', function() {
+            var iframe = player.getIframe();
             if (window.orientation === 90 || window.orientation === -90) {
-                var iframe = player.getIframe();
-                if (iframe.webkitEnterFullscreen) {
-                    iframe.webkitEnterFullscreen(); // iOS Safari specific method
-                }
+                iframe.style.width = '100vw';
+                iframe.style.height = '100vh';
+            } else {
+                iframe.style.width = '100%';
+                iframe.style.height = '56.25vw'; // Maintain 16:9 aspect ratio
+            }
+        });
+
+        // Initial resize
+        window.addEventListener('load', function() {
+            var iframe = player.getIframe();
+            if (window.orientation === 90 || window.orientation === -90) {
+                iframe.style.width = '100vw';
+                iframe.style.height = '100vh';
+            } else {
+                iframe.style.width = '100%';
+                iframe.style.height = '56.25vw'; // Maintain 16:9 aspect ratio
             }
         });
     </script>
