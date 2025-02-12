@@ -51,6 +51,9 @@
             color: white;
             margin-bottom: 20px;
         }
+        .hide-controls {
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -76,9 +79,11 @@
                 videoId: 'AaayAuLZkmk', // New video ID
                 playerVars: {
                     'autoplay': 1,
-                    'controls': 1, // Controls will be visible
+                    'controls': 0, // Hide controls initially
                     'mute': 1, // Mute the video to ensure autoplay works
-                    'fs': 1 // Allow fullscreen
+                    'fs': 1, // Allow fullscreen
+                    'modestbranding': 1, // Remove YouTube logo
+                    'rel': 0 // Disable related videos at the end
                 },
                 events: {
                     'onReady': onPlayerReady,
@@ -96,6 +101,7 @@
         // The API calls this function when the player's state changes.
         function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.PLAYING) {
+                document.getElementById('player').classList.add('hide-controls'); // Hide controls
                 setInterval(function() {
                     var currentTime = player.getCurrentTime();
                     if (currentTime > lastTimeUpdate + 1) {
@@ -106,6 +112,8 @@
                 }, 1000);
             } else if (event.data == YT.PlayerState.ENDED) {
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
+            } else {
+                document.getElementById('player').classList.remove('hide-controls'); // Show controls
             }
         }
 
