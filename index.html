@@ -2,55 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Watch the Video</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.8);
-        }
-        #content {
-            position: relative;
-            z-index: 2;
+        html, body {
             width: 100%;
             height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: black;
+        }
+        #player-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 10px;
-            box-sizing: border-box;
         }
-        #player {
+        iframe {
+            width: 100vw;
+            height: 100vh;
+        }
+        /* Hide the navigation UI in iOS Safari */
+        body.fullscreen-fix {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 56vw; /* Maintains 16:9 aspect ratio */
-            max-height: 90vh;
-            border: none;
-        }
-        h2 {
-            font-size: 1.5em;
-            font-family: Arial, sans-serif;
-            color: white;
-            margin-bottom: 20px;
+            height: 100%;
         }
     </style>
 </head>
 <body>
-    <div id="content">
-        <h2>ADIAHC Health and Safety Induction</h2>
+    <div id="player-container">
         <div id="player"></div>
     </div>
 
     <script>
-        // Load YouTube API asynchronously
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -60,12 +54,13 @@
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                videoId: 'AaayAuLZkmk', // New video ID
+                videoId: 'AaayAuLZkmk',
                 playerVars: {
                     'autoplay': 1,
                     'controls': 1,
-                    'mute': 1, // Ensures autoplay works
-                    'fs': 1
+                    'mute': 1,
+                    'playsinline': 0, // Forces fullscreen on iPhone
+                    'fs': 1 
                 },
                 events: {
                     'onReady': onPlayerReady,
@@ -75,28 +70,39 @@
         }
 
         function onPlayerReady(event) {
-            event.target.playVideo(); // Start playback
-            setTimeout(() => {
-                player.unMute(); // Allow unmuting after a delay
-            }, 2000);
+            event.target.playVideo();
+            player.unMute();
         }
 
         function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.ENDED) {
+            if (event.data === YT.PlayerState.ENDED) {
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
             }
         }
 
-        // Fullscreen toggle for user interaction
-        document.getElementById('player').addEventListener('click', function() {
+        // Handle fullscreen properly
+        function enterFullscreen() {
             var iframe = player.getIframe();
             if (iframe.requestFullscreen) {
                 iframe.requestFullscreen();
-            } else if (iframe.webkitRequestFullscreen) {
+            } else if (iframe.webkitRequestFullscreen) { 
                 iframe.webkitRequestFullscreen();
+            }
+        }
+
+        // Ensure fullscreen on iPhone when rotated
+        window.addEventListener("orientationchange", function() {
+            if (window.orientation === 90 || window.orientation === -90) {
+                enterFullscreen();
             }
         });
 
+        // Hide Safari UI on scroll
+        function hideSafariUI() {
+            document.body.classList.add("fullscreen-fix");
+        }
+
+        setTimeout(hideSafariUI, 100);
     </script>
 </body>
 </html>
