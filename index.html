@@ -148,6 +148,7 @@
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         var player;
+        var videoStarted = false;
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
@@ -169,20 +170,24 @@
         }
 
         function onPlayerReady(event) {
-            event.target.playVideo();
-            player.unMute();
+            if (!isMobile) {
+                event.target.playVideo();
+                player.unMute();
+                videoStarted = true;
+            }
         }
 
         function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.ENDED) {
-                window.location.href = "https://forms.office.com/r/75jdBjwfDw";
                 setTimeout(showRotateMessageIfNeeded, 1000);
-            } else if (event.data == YT.PlayerState.PAUSED) {
+                window.location.href = "https://forms.office.com/r/75jdBjwfDw";
+            } else if (event.data == YT.PlayerState.PAUSED && videoStarted) {
                 document.getElementById('overlay-paused').style.display = 'block';
                 document.getElementById('pause-button').innerText = 'Play';
             } else if (event.data == YT.PlayerState.PLAYING) {
                 document.getElementById('overlay-paused').style.display = 'none';
                 document.getElementById('pause-button').innerText = 'Pause';
+                videoStarted = true;
             }
         }
 
@@ -203,7 +208,18 @@
         }
 
         window.addEventListener('resize', showRotateMessageIfNeeded);
-        window.addEventListener('load', showRotateMessageIfNeeded);
+        window.addEventListener('load', function() {
+            showRotateMessageIfNeeded();
+            if (isMobile) {
+                document.getElementById('overlay-permanent').addEventListener('click', function() {
+                    if (!videoStarted) {
+                        player.playVideo();
+                        player.unMute();
+                        videoStarted = true;
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>
