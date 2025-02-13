@@ -46,6 +46,16 @@
             position: relative;
             z-index: 3;
         }
+        #overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 4;
+        }
         #pause-button {
             position: absolute;
             bottom: 20px;
@@ -57,7 +67,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            z-index: 4;
+            z-index: 5;
         }
         #prompt {
             position: absolute;
@@ -101,6 +111,7 @@
     <div id="background"></div>
     <div id="content">
         <div id="player"></div>
+        <div id="overlay"></div>
         <button id="pause-button" onclick="togglePause()">Pause</button>
         <div id="prompt" style="display: none;">
             <p>For the best experience, please <span id="open-in-chrome">open this page in Google Chrome</span> or add this page to your home screen.</p>
@@ -156,6 +167,12 @@
             if (event.data == YT.PlayerState.ENDED) {
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
                 setTimeout(showRotateMessageIfNeeded, 1000);
+            } else if (event.data == YT.PlayerState.PAUSED) {
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('pause-button').innerText = 'Play';
+            } else if (event.data == YT.PlayerState.PLAYING) {
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('pause-button').innerText = 'Pause';
             }
         }
 
@@ -170,10 +187,8 @@
         function togglePause() {
             if (player.getPlayerState() === YT.PlayerState.PLAYING) {
                 player.pauseVideo();
-                document.getElementById('pause-button').innerText = 'Play';
             } else {
                 player.playVideo();
-                document.getElementById('pause-button').innerText = 'Pause';
             }
         }
 
