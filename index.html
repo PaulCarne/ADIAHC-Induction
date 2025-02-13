@@ -107,20 +107,6 @@
             text-decoration: underline;
             cursor: pointer;
         }
-        #rotate-message {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
         /* Additional CSS to hide YouTube button and overlays */
         .ytp-chrome-top-buttons,
         .ytp-chrome-bottom,
@@ -140,6 +126,9 @@
         <button id="pause-button" onclick="togglePause()">Pause</button>
         <button id="start-button" onclick="startVideo()">Start Video</button>
         <div id="prompt" style="display: none;">
+            <p>For the best experience, please <span id="open-in-chrome">open this page in Google Chrome</span> or add this page to your home screen.</p>
+        </div>
+    </div>
 
     <script>
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -191,7 +180,6 @@
 
         function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.ENDED) {
-                setTimeout(showRotateMessage, 1000);
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
             } else if (event.data == YT.PlayerState.PAUSED && videoStarted) {
                 document.getElementById('overlay-paused').style.display = 'block';
@@ -201,10 +189,6 @@
                 document.getElementById('pause-button').innerText = 'Pause';
                 videoStarted = true;
             }
-        }
-
-        function showRotateMessage() {
-            document.getElementById('rotate-message').style.display = 'flex';
         }
 
         function togglePause() {
@@ -222,11 +206,6 @@
             document.getElementById('start-button').style.display = 'none';
         }
 
-        window.addEventListener('resize', function() {
-            if (document.getElementById('rotate-message').style.display === 'flex') {
-                showRotateMessage();
-            }
-        });
         window.addEventListener('load', function() {
             if (isMobile) {
                 document.getElementById('overlay-permanent').addEventListener('click', function() {
