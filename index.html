@@ -14,7 +14,7 @@
             height: 100vh;
             margin: 0;
             text-align: center;
-            background: #00B5E2;
+            background: #00B5E2; /* Pantone 306 C background color */
             overflow: hidden;
         }
         #background {
@@ -46,13 +46,17 @@
             position: relative;
             z-index: 3;
         }
-        #overlay {
+        #pause-button {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
             z-index: 4;
         }
         #prompt {
@@ -97,7 +101,7 @@
     <div id="background"></div>
     <div id="content">
         <div id="player"></div>
-        <div id="overlay"></div>
+        <button id="pause-button" onclick="togglePause()">Pause</button>
         <div id="prompt" style="display: none;">
             <p>For the best experience, please <span id="open-in-chrome">open this page in Google Chrome</span> or add this page to your home screen.</p>
         </div>
@@ -160,6 +164,16 @@
                 document.getElementById('rotate-message').style.display = 'flex';
             } else {
                 document.getElementById('rotate-message').style.display = 'none';
+            }
+        }
+
+        function togglePause() {
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+                document.getElementById('pause-button').innerText = 'Play';
+            } else {
+                player.playVideo();
+                document.getElementById('pause-button').innerText = 'Pause';
             }
         }
 
