@@ -14,8 +14,7 @@
             height: 100vh;
             margin: 0;
             text-align: center;
-            position: relative;
-            background: rgba(0, 0, 0, 0.8); /* Dark background to make video stand out */
+            background: #00B5E2;
             overflow: hidden;
         }
         #background {
@@ -45,12 +44,6 @@
             max-height: 100%;
             border: none;
         }
-        h2 {
-            font-size: 1.5em;
-            font-family: Arial, sans-serif;
-            color: white;
-            margin-bottom: 20px;
-        }
         #prompt {
             position: absolute;
             bottom: 10px;
@@ -65,51 +58,64 @@
             text-decoration: underline;
             cursor: pointer;
         }
+        #rotate-message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
     </style>
 </head>
 <body>
     <div id="background"></div>
     <div id="content">
-        <h2>ADIAHC Health and Safety Induction</h2>
         <div id="player"></div>
         <div id="prompt" style="display: none;">
             <p>For the best experience, please <span id="open-in-chrome">open this page in Google Chrome</span> or add this page to your home screen.</p>
         </div>
     </div>
+    <div id="rotate-message">
+        <p>Please rotate your device to portrait mode.</p>
+    </div>
 
     <script>
-        // Check if the user is on iOS
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-        // Detect if the app is running in standalone mode on iOS
         if (isIOS && window.navigator.standalone === false) {
             document.getElementById('prompt').style.display = 'block';
             document.getElementById('open-in-chrome').addEventListener('click', function() {
-                // Replace 'your-url' with the actual URL you want to open in Chrome
                 window.location.href = 'googlechrome://navigate?url=' + encodeURIComponent(window.location.href);
             });
         }
 
-        // Load the IFrame Player API code asynchronously.
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         var player;
-        var lastTimeUpdate = 0;
 
-        // This function creates an <iframe> (and YouTube player) after the API code downloads.
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                videoId: 'AaayAuLZkmk', // New video ID
+                videoId: 'AaayAuLZkmk',
                 playerVars: {
                     'autoplay': 1,
-                    'controls': 0, // Hide controls initially
-                    'mute': 1, // Mute the video to ensure autoplay works
-                    'fs': 1, // Allow fullscreen
-                    'modestbranding': 1, // Remove YouTube logo
-                    'rel': 0 // Disable related videos at the end
+                    'controls': 0,
+                    'mute': 1,
+                    'fs': 1,
+                    'modestbranding': 1,
+                    'rel': 0,
+                    'iv_load_policy': 3, // Disable annotations
+                    'showinfo': 0 // Deprecated, but included for completeness
                 },
                 events: {
                     'onReady': onPlayerReady,
@@ -118,54 +124,29 @@
             });
         }
 
-        // The API will call this function when the video player is ready.
         function onPlayerReady(event) {
             event.target.playVideo();
-            player.unMute(); // Unmute after starting to ensure sound plays
+            player.unMute();
         }
 
-        // The API calls this function when the player's state changes.
         function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING) {
-                document.getElementById('player').classList.add('hide-controls'); // Hide controls
-                setInterval(function() {
-                    var currentTime = player.getCurrentTime();
-                    if (currentTime > lastTimeUpdate + 1) {
-                        player.seekTo(lastTimeUpdate);
-                    } else {
-                        lastTimeUpdate = currentTime;
-                    }
-                }, 1000);
-            } else if (event.data == YT.PlayerState.ENDED) {
+            if (event.data == YT.PlayerState.ENDED) {
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
-            } else {
-                document.getElementById('player').classList.remove('hide-controls'); // Show controls
+                setTimeout(showRotateMessageIfNeeded, 1000);
             }
         }
 
-        // Add event listener to resize the player on orientation change
-        window.addEventListener('orientationchange', function() {
-            var iframe = player.getIframe();
-            if (window.orientation === 90 || window.orientation === -90) {
-                iframe.style.width = '100vw';
-                iframe.style.height = '100vh';
+        function showRotateMessageIfNeeded() {
+            if (isMobile && (window.innerWidth > window.innerHeight)) {
+                document.getElementById('rotate-message').style.display = 'flex';
             } else {
-                iframe.style.width = '100%';
-                iframe.style.height = '56.25vw'; // Maintain 16:9 aspect ratio
+                document.getElementById('rotate-message').style.display = 'none';
             }
-        });
+        }
 
-        // Initial resize
-        window.addEventListener('load', function() {
-            var iframe = player.getIframe();
-            if (window.orientation === 90 || window.orientation === -90) {
-                iframe.style.width = '100vw';
-                iframe.style.height = '100vh';
-            } else {
-                iframe.style.width = '100%';
-                iframe.style.height = '56.25vw'; // Maintain 16:9 aspect ratio
-            }
-        });
+        window.addEventListener('resize', showRotateMessageIfNeeded);
+        window.addEventListener('load', showRotateMessageIfNeeded);
     </script>
 </body>
 </html>
+``` ▋
