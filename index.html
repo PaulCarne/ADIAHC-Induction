@@ -78,21 +78,6 @@
             cursor: pointer;
             z-index: 6;
         }
-        #start-button {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px 40px;
-            background: #fff;
-            color: #000;
-            border: none;
-            border-radius: 5px;
-            font-size: 20px;
-            cursor: pointer;
-            z-index: 7;
-        }
         #prompt {
             position: absolute;
             bottom: 10px;
@@ -124,7 +109,6 @@
         <div id="overlay-permanent"></div>
         <div id="overlay-paused"></div>
         <button id="pause-button" onclick="togglePause()">Pause</button>
-        <button id="start-button" onclick="startVideo()">Play Video</button>
         <div id="prompt" style="display: none;">
             <p>For the best experience, please <span id="open-in-chrome">open this page in Google Chrome</span> or add this page to your home screen.</p>
         </div>
@@ -173,8 +157,6 @@
                 event.target.playVideo();
                 player.unMute();
                 videoStarted = true;
-            } else {
-                document.getElementById('start-button').style.display = 'block';
             }
         }
 
@@ -199,16 +181,8 @@
             }
         }
 
-        function startVideo() {
-            player.playVideo();
-            player.unMute();
-            videoStarted = true;
-            document.getElementById('start-button').style.display = 'none';
-        }
-
         window.addEventListener('load', function() {
             if (isMobile) {
-                document.getElementById('start-button').style.zIndex = '8';
                 document.getElementById('overlay-permanent').addEventListener('click', function() {
                     if (!videoStarted) {
                         player.playVideo();
@@ -218,3 +192,6 @@
                 });
             }
         });
+    </script>
+</body>
+</html>
