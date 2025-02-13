@@ -78,6 +78,21 @@
             cursor: pointer;
             z-index: 6;
         }
+        #start-button {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 7;
+        }
         #prompt {
             position: absolute;
             bottom: 10px;
@@ -123,6 +138,7 @@
         <div id="overlay-permanent"></div>
         <div id="overlay-paused"></div>
         <button id="pause-button" onclick="togglePause()">Pause</button>
+        <button id="start-button" onclick="startVideo()">Start Video</button>
         <div id="prompt" style="display: none;">
             <p>For the best experience, please <span id="open-in-chrome">open this page in Google Chrome</span> or add this page to your home screen.</p>
         </div>
@@ -174,12 +190,14 @@
                 event.target.playVideo();
                 player.unMute();
                 videoStarted = true;
+            } else {
+                document.getElementById('start-button').style.display = 'block';
             }
         }
 
         function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.ENDED) {
-                setTimeout(showRotateMessageIfNeeded, 1000);
+                setTimeout(showRotateMessage, 1000);
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
             } else if (event.data == YT.PlayerState.PAUSED && videoStarted) {
                 document.getElementById('overlay-paused').style.display = 'block';
@@ -191,12 +209,8 @@
             }
         }
 
-        function showRotateMessageIfNeeded() {
-            if (isMobile && (window.innerWidth > window.innerHeight)) {
-                document.getElementById('rotate-message').style.display = 'flex';
-            } else {
-                document.getElementById('rotate-message').style.display = 'none';
-            }
+        function showRotateMessage() {
+            document.getElementById('rotate-message').style.display = 'flex';
         }
 
         function togglePause() {
@@ -207,9 +221,19 @@
             }
         }
 
-        window.addEventListener('resize', showRotateMessageIfNeeded);
+        function startVideo() {
+            player.playVideo();
+            player.unMute();
+            videoStarted = true;
+            document.getElementById('start-button').style.display = 'none';
+        }
+
+        window.addEventListener('resize', function() {
+            if (document.getElementById('rotate-message').style.display === 'flex') {
+                showRotateMessage();
+            }
+        });
         window.addEventListener('load', function() {
-            showRotateMessageIfNeeded();
             if (isMobile) {
                 document.getElementById('overlay-permanent').addEventListener('click', function() {
                     if (!videoStarted) {
