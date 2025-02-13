@@ -72,6 +72,12 @@
             align-items: center;
             z-index: 9999;
         }
+        /* Additional CSS to hide YouTube button */
+        .ytp-chrome-top-buttons, 
+        .ytp-chrome-bottom, 
+        .ytp-show-cards-title {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -114,8 +120,7 @@
                     'fs': 1,
                     'modestbranding': 1,
                     'rel': 0,
-                    'iv_load_policy': 3, // Disable annotations
-                    'showinfo': 0 // Deprecated, but included for completeness
+                    'iv_load_policy': 3 // Disable annotations
                 },
                 events: {
                     'onReady': onPlayerReady,
@@ -149,4 +154,4 @@
     </script>
 </body>
 </html>
-``` ▋
+Paul
