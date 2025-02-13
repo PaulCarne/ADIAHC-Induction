@@ -208,6 +208,7 @@
 
         window.addEventListener('load', function() {
             if (isMobile) {
+                document.getElementById('start-button').style.zIndex = '8';
                 document.getElementById('overlay-permanent').addEventListener('click', function() {
                     if (!videoStarted) {
                         player.playVideo();
@@ -215,3 +216,5 @@
                         videoStarted = true;
                     }
                 });
+            }
+        });
