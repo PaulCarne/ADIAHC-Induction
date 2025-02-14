@@ -5,123 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Watch the Video</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-            background: #00B5E2;
-            overflow: hidden;
-        }
-        #background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-        #content {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-        #player {
-            width: 100%;
-            height: 100%;
-            max-width: 100%;
-            max-height: 100%;
-            border: none;
-            position: relative;
-            z-index: 3;
-        }
-        #overlay-permanent {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            z-index: 4;
-        }
-        #overlay-paused {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            z-index: 5;
-        }
-        #pause-button {
-            padding: 10px 20px;
-            background: red;
-            color: #fff;
-            border: 1px solid black;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 6;
-            font-weight: bold;
-        }
-        #start-button {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px 40px;
-            background: red;
-            color: #fff;
-            border: 1px solid black;
-            border-radius: 5px;
-            font-size: 20px;
-            cursor: pointer;
-            z-index: 7;
-            font-weight: bold;
-        }
-        #prompt {
-            position: absolute;
-            bottom: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            z-index: 3;
-        }
-        #open-in-chrome {
-            color: #4285f4;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-        /* Additional CSS to hide YouTube button and overlays */
-        .ytp-chrome-top-buttons,
-        .ytp-chrome-bottom,
-        .ytp-show-cards-title,
-        .ytp-pause-overlay,
-        .ytp-youtube-button {
-            display: none !important;
-        }
-        /* Media query for mobile devices */
-        @media (max-width: 768px) {
-            #pause-button {
-                position: absolute;
-                bottom: 20px;
-                right: 20px;
-            }
-        }
-    </style>
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="0; url=https://paulcarne.github.io/ADIAHC-Induction/video.html">
+    <script type="text/javascript">
+        setTimeout(function(){
+            window.location.href = "https://paulcarne.github.io/ADIAHC-Induction/video.html";
+        }, 0);
+    </script>
 </head>
 <body>
     <div id="background"></div>
