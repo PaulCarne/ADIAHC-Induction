@@ -14,7 +14,7 @@
             height: 100vh;
             margin: 0;
             text-align: center;
-            background: #00B5E2;
+            background: #000000;
             overflow: hidden;
         }
         #background {
@@ -65,34 +65,41 @@
             background: transparent;
             z-index: 5;
         }
-        #pause-button {
+        #pause-button,
+        #start-button,
+        #large-play-button {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            padding: 10px 20px;
-            background: red;
+            background: none;
             color: #fff;
-            border: 1px solid black;
-            border-radius: 5px;
+            border: none;
             cursor: pointer;
-            z-index: 6;
             font-weight: bold;
+            text-shadow: 0 0 2px #ff0000; /* red border around the symbols */
+            z-index: 6;
+        }
+        #pause-button,
+        #start-button {
+            font-size: 2em; /* twice the size */
         }
         #start-button {
+            display: none;
+        }
+        #large-play-button {
+            font-size: 4em; /* larger size for the center button */
+            display: none;
+        }
+        #mobile-message {
             display: none;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            padding: 20px 40px;
-            background: red;
             color: #fff;
-            border: 1px solid black;
+            font-size: 1.5em;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
             border-radius: 5px;
-            font-size: 20px;
-            cursor: pointer;
-            z-index: 7;
-            font-weight: bold;
+            z-index: 7; /* Ensure this is on top of all overlays */
         }
         #prompt {
             position: absolute;
@@ -117,14 +124,6 @@
         .ytp-large-play-button {
             display: none !important;
         }
-        /* Media query for mobile devices */
-        @media (max-width: 768px) {
-            #pause-button {
-                bottom: 20px;
-                right: 20px;
-                left: auto;
-            }
-        }
     </style>
 </head>
 <body>
@@ -133,24 +132,24 @@
         <div id="player"></div>
         <div id="overlay-permanent"></div>
         <div id="overlay-paused"></div>
-        <button id="pause-button" onclick="togglePause()">Pause</button>
-        <button id="start-button" onclick="startVideo()">Play Video</button>
+        <button id="pause-button" onclick="togglePause()">⏸️</button>
+        <button id="start-button" onclick="startVideo()">▶️</button>
+        <button id="large-play-button" onclick="startVideo()">▶️</button>
+        <div id="mobile-message">Press Play Below</div>
         <div id="prompt" style="display: none;">
-            <p>For the best experience, please <span id="open-in-chrome">open this page in Google Chrome</span> or add this page to your home screen.</p>
         </div>
     </div>
 
     <script>
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        const isLaptop = !isMobile;
-
         if (isIOS && window.navigator.standalone === false) {
             document.getElementById('prompt').style.display = 'block';
             document.getElementById('open-in-chrome').addEventListener('click', function() {
                 window.location.href = 'googlechrome://navigate?url=' + encodeURIComponent(window.location.href);
             });
         }
+
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -180,13 +179,16 @@
         }
 
         function onPlayerReady(event) {
-            if (isLaptop) {
-                player.mute(); // Ensure the video is muted to allow autoplay
-                player.playVideo();
+            if (!isMobile) {
+                event.target.playVideo();
+                player.unMute();
                 videoStarted = true;
+                document.getElementById('pause-button').style.display = 'block';
             } else {
-                document.getElementById('start-button').style.display = 'block';
+                document.getElementById('large-play-button').style.display = 'block';
+                document.getElementById('mobile-message').style.display = 'block';
             }
+            positionButtons();
         }
 
         function onPlayerStateChange(event) {
@@ -194,10 +196,13 @@
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
             } else if (event.data == YT.PlayerState.PAUSED && videoStarted) {
                 document.getElementById('overlay-paused').style.display = 'block';
-                document.getElementById('pause-button').innerText = 'Play';
+                document.getElementById('pause-button').innerText = '▶️';
             } else if (event.data == YT.PlayerState.PLAYING) {
                 document.getElementById('overlay-paused').style.display = 'none';
-                document.getElementById('pause-button').innerText = 'Pause';
+                document.getElementById('pause-button').innerText = '⏸️';
+                document.getElementById('pause-button').style.display = 'block';
+                document.getElementById('large-play-button').style.display = 'none';
+                document.getElementById('mobile-message').style.display = 'none';
                 videoStarted = true;
             }
         }
@@ -205,8 +210,10 @@
         function togglePause() {
             if (player.getPlayerState() === YT.PlayerState.PLAYING) {
                 player.pauseVideo();
+                document.getElementById('pause-button').innerText = '▶️';
             } else {
                 player.playVideo();
+                document.getElementById('pause-button').innerText = '⏸️';
             }
         }
 
@@ -215,8 +222,35 @@
             player.unMute();
             videoStarted = true;
             document.getElementById('start-button').style.display = 'none';
+            document.getElementById('large-play-button').style.display = 'none';
+            document.getElementById('mobile-message').style.display = 'none';
+            document.getElementById('pause-button').style.display = 'block';
         }
 
+        function positionButtons() {
+            const playerElement = document.getElementById('player');
+            const pauseButton = document.getElementById('pause-button');
+            const startButton = document.getElementById('start-button');
+            const largePlayButton = document.getElementById('large-play-button');
+            const mobileMessage = document.getElementById('mobile-message');
+
+            const playerRect = playerElement.getBoundingClientRect();
+            const gap = 20; // distance from the bottom and left sides
+
+            pauseButton.style.left = `${playerRect.left + gap}px`;
+            pauseButton.style.bottom = `${window.innerHeight - playerRect.bottom + gap}px`;
+
+            startButton.style.left = `${playerRect.left + gap}px`;
+            startButton.style.bottom = `${window.innerHeight - playerRect.bottom + gap}px`;
+
+            largePlayButton.style.left = `${playerRect.left + (playerRect.width / 2) - (largePlayButton.clientWidth / 2)}px`;
+            largePlayButton.style.top = `${playerRect.top + (playerRect.height / 2) - (largePlayButton.clientHeight / 2)}px`;
+
+            mobileMessage.style.left = `${playerRect.left + (playerRect.width / 2) - (mobileMessage.clientWidth / 2)}px`;
+            mobileMessage.style.top = `${playerRect.top + (playerRect.height / 2) - (mobileMessage.clientHeight / 2)}px`;
+        }
+
+        window.addEventListener('resize', positionButtons);
         window.addEventListener('load', function() {
             if (isMobile) {
                 document.getElementById('overlay-permanent').addEventListener('click', function() {
@@ -224,9 +258,13 @@
                         player.playVideo();
                         player.unMute();
                         videoStarted = true;
+                        document.getElementById('large-play-button').style.display = 'none';
+                        document.getElementById('mobile-message').style.display = 'none';
+                        document.getElementById('pause-button').style.display = 'block';
                     }
                 });
             }
+            positionButtons();
         });
     </script>
 </body>
