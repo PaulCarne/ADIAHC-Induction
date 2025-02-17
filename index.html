@@ -142,14 +142,15 @@
 
     <script>
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const isLaptop = !isMobile;
+
         if (isIOS && window.navigator.standalone === false) {
             document.getElementById('prompt').style.display = 'block';
             document.getElementById('open-in-chrome').addEventListener('click', function() {
                 window.location.href = 'googlechrome://navigate?url=' + encodeURIComponent(window.location.href);
             });
         }
-
-        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -179,9 +180,9 @@
         }
 
         function onPlayerReady(event) {
-            if (!isMobile) {
-                event.target.playVideo();
-                player.unMute();
+            if (isLaptop) {
+                player.mute(); // Ensure the video is muted to allow autoplay
+                player.playVideo();
                 videoStarted = true;
             } else {
                 document.getElementById('start-button').style.display = 'block';
