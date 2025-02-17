@@ -66,6 +66,9 @@
             z-index: 5;
         }
         #pause-button {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
             padding: 10px 20px;
             background: red;
             color: #fff;
@@ -110,15 +113,16 @@
         .ytp-chrome-bottom,
         .ytp-show-cards-title,
         .ytp-pause-overlay,
-        .ytp-youtube-button {
+        .ytp-youtube-button,
+        .ytp-large-play-button {
             display: none !important;
         }
         /* Media query for mobile devices */
         @media (max-width: 768px) {
             #pause-button {
-                position: absolute;
                 bottom: 20px;
                 right: 20px;
+                left: auto;
             }
         }
     </style>
